@@ -1,10 +1,36 @@
 pipeline {
     agent any
     stages {
-        stage('build') {
+        stage('Build') {
             steps {
-                bat 'docker run --rm python:3.15.2-alpine3.24 python --version'
+                echo 'Etape 1 : Lancement du build...'
+                bat 'echo "Bonjour depuis Windows !"'
             }
+        }
+        stage('Deploy (avec sécurité)') {
+            steps {
+                timeout(time: 3, unit: 'MINUTES') {
+                    retry(3) {
+                        bat 'echo "Simulation de déploiement en cours..."'
+                    }
+                }
+            }
+        }
+        stage('Test (avec erreur volontaire)') {
+            steps {
+                bat 'echo "Oh non, une erreur !"; exit /b 1'
+            }
+        }
+    }
+    post {
+        always {
+            echo 'POST : Ceci s\'affiche TOUJOURS, peu importe le résultat.'
+        }
+        success {
+            echo 'POST : Ceci s\'affiche uniquement si tout est VERT.'
+        }
+        failure {
+            echo 'POST : Ceci s\'affiche uniquement s\'il y a un echec (ROUGE).'
         }
     }
 }
