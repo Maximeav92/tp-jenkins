@@ -1,9 +1,9 @@
 pipeline {
-    agent { docker { image 'python:3.15.2-alpine3.24' } }
+    agent any
     stages {
         stage('build') {
             steps {
-                sh 'python --version'
+                bat 'docker run --rm python:3.15.2-alpine3.24 python --version'
             }
         }
     }
